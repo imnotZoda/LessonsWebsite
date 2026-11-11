@@ -67,7 +67,19 @@ export default function App() {
       case 'lessons':
         return <LessonsPage userId={currentUser.id} />;
       case 'simulation':
-        return <SimulationPage />;
+        return (
+          <SimulationPage
+            initialSim="arm"
+            onSimChange={(sim) => setCurrentRoute(sim === 'arm' ? 'simulation' : 'nav-simulation')}
+          />
+        );
+      case 'nav-simulation':
+        return (
+          <SimulationPage
+            initialSim="navigation"
+            onSimChange={(sim) => setCurrentRoute(sim === 'arm' ? 'simulation' : 'nav-simulation')}
+          />
+        );
       case 'admin':
         return <AdminPage adminId={currentUser.id} />;
       case 'profile':
@@ -85,7 +97,6 @@ export default function App() {
 
   return (
     <SafeAreaView nativeID="app-shell" style={styles.container}>
-      {renderScreen()}
       {currentUser && (
         <Navbar 
           currentRoute={currentRoute} 
@@ -94,6 +105,7 @@ export default function App() {
           onLogout={handleLogout} 
         />
       )}
+      {renderScreen()}
     </SafeAreaView>
   );
 }

@@ -28,7 +28,7 @@ export default function RichContentDisplay({ html, fontSize }: RichContentDispla
   }
 
   const displayHtml = cleanContentHtml(html)
-    .replace(/src="(\/uploads\/[^\"]+)"/g, (_match, path) => `src="${API_URL.replace(/\/api$/, '')}${path}"`)
+    .replace(/src="(?:https?:\/\/[^/]+)?(\/uploads\/[^"]+)"/g, (_match, path) => `src="${API_URL.replace(/\/api$/, '')}${path}"`)
     .replace(/<img\b(?![^>]*style=)/gi, '<img style="max-width:100%;height:auto;display:block;margin:12px 0;"');
 
   return (

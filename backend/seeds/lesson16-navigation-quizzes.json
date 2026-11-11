@@ -1,0 +1,122 @@
+[
+  {
+    "lessonCode": "L16.1",
+    "title": "L16.1 — Mobile Robot Fundamentals Quiz",
+    "passingScore": 60,
+    "questions": [
+      {"questionText":"What defines a robot's configuration space (C-space) in a 2D plane?","points":1,"options":[{"text":"Mass and inertia","isCorrect":false},{"text":"Position (x, y) and Orientation (θ)","isCorrect":true},{"text":"Wheel radius and track width","isCorrect":false},{"text":"Maximum linear and angular velocity","isCorrect":false}]},
+      {"questionText":"What constraint is characteristic of differential drive systems?","points":1,"options":[{"text":"Holonomic motion","isCorrect":false},{"text":"Non-holonomic motion (cannot slide sideways)","isCorrect":true},{"text":"Instantaneous lateral translation","isCorrect":false},{"text":"Zero turning radius at all times","isCorrect":false}]},
+      {"questionText":"Which of the following limits linear acceleration and deceleration?","points":1,"options":[{"text":"Sensor noise and Gaussian error","isCorrect":false},{"text":"Grid resolution and cell occupancy","isCorrect":false},{"text":"Motor torques","isCorrect":true},{"text":"Heuristic estimates","isCorrect":false}]},
+      {"questionText":"How can a differential drive robot turn in place?","points":1,"options":[{"text":"By setting v_L = v_R","isCorrect":false},{"text":"By setting v_L = -v_R","isCorrect":true},{"text":"By sliding sideways at v_y > 0","isCorrect":false},{"text":"By maximizing wheel slip","isCorrect":false}]},
+      {"questionText":"What does the geometric shape (bounding circle or polygon) of a robot dictate?","points":1,"options":[{"text":"Wheel traction and friction coefficients","isCorrect":false},{"text":"Clearance around obstacles","isCorrect":true},{"text":"Gear ratio and motor power","isCorrect":false},{"text":"Path cost g(n)","isCorrect":false}]}
+    ]
+  },
+  {
+    "lessonCode": "L16.2",
+    "title": "L16.2 — Representing the Environment Quiz",
+    "passingScore": 60,
+    "questions": [
+      {"questionText":"In grid-based map representations, what is continuous floor space discretized into?","points":1,"options":[{"text":"A continuous vector space","isCorrect":false},{"text":"A uniform grid of individual cells","isCorrect":true},{"text":"Point clouds","isCorrect":false},{"text":"Continuous curves","isCorrect":false}]},
+      {"questionText":"Why is obstacle inflation necessary?","points":1,"options":[{"text":"To eliminate all sensor noise completely","isCorrect":false},{"text":"To convert the robot into a point mass while ensuring a safe physical clearance buffer","isCorrect":true},{"text":"To increase the turning radius of the robot indefinitely","isCorrect":false},{"text":"To speed up sensor reading cycles","isCorrect":false}]},
+      {"questionText":"If a robot has a radius of 0.5 meters and a grid resolution of 0.1 meters per cell, by how many cells are obstacles inflated?","points":1,"options":[{"text":"Exactly 1 cell","isCorrect":false},{"text":"At least 5 cells","isCorrect":true},{"text":"10 cells","isCorrect":false},{"text":"50 cells","isCorrect":false}]},
+      {"questionText":"Which of the following is an inherent limitation of environmental maps?","points":1,"options":[{"text":"Absolute perfection and static permanence","isCorrect":false},{"text":"Incompleteness, static obsolescence, and sensor noise","isCorrect":true},{"text":"Infinite computational speed","isCorrect":false},{"text":"Zero measurement errors","isCorrect":false}]},
+      {"questionText":"What should a planned route through free grid cells always be treated as?","points":1,"options":[{"text":"A permanent, unchangeable guarantee","isCorrect":false},{"text":"A tentative candidate subject to real-time verification","isCorrect":true},{"text":"An obsolete piece of data that cannot be trusted","isCorrect":false},{"text":"An infinitely thin line","isCorrect":false}]}
+    ]
+  },
+  {
+    "lessonCode": "L16.3",
+    "title": "L16.3 — Sensors and Obstacle Detection Quiz",
+    "passingScore": 60,
+    "questions": [
+      {"questionText":"What do ultrasonic and infrared (IR) sensors measure for short-range distance estimation?","points":1,"options":[{"text":"Global coordinates and orientation angles","isCorrect":false},{"text":"Time-of-flight or reflection intensity","isCorrect":true},{"text":"Dense 360-degree point clouds","isCorrect":false},{"text":"Digital camera semantic context","isCorrect":false}]},
+      {"questionText":"What is a primary limitation of ultrasonic and infrared sensors?","points":1,"options":[{"text":"Excessive computational power requirements","isCorrect":false},{"text":"Severe range limitations, narrow beams, and surface reflectivity dependencies","isCorrect":true},{"text":"Inability to detect any obstacles at all","isCorrect":false},{"text":"Complete immunity to ambient light and dust","isCorrect":false}]},
+      {"questionText":"What do LiDAR units use to construct dense point clouds of surroundings?","points":1,"options":[{"text":"Sound waves reflected from surfaces","isCorrect":false},{"text":"Rotating or sweeping laser beams across a 360-degree plane","isCorrect":true},{"text":"Digital camera video feeds","isCorrect":false},{"text":"Infrared heat signatures","isCorrect":false}]},
+      {"questionText":"Which filter is mentioned for accumulating sensor data over multiple sampling cycles with confidence weights?","points":1,"options":[{"text":"Moving average filter, Kalman filter, or probabilistic occupancy grid","isCorrect":true},{"text":"Step-count breadth-first filter","isCorrect":false},{"text":"Obstacle inflation filter","isCorrect":false},{"text":"Centripetal force filter","isCorrect":false}]},
+      {"questionText":"How should a spurious echo from a dust particle be handled by the navigation system?","points":1,"options":[{"text":"Trigger an emergency stop immediately","isCorrect":false},{"text":"Cause erratic deviation in path planning","isCorrect":false},{"text":"Be filtered out to prevent unnecessary stops or deviations","isCorrect":true},{"text":"Automatically redefine the global goal coordinate","isCorrect":false}]}
+    ]
+  },
+  {
+    "lessonCode": "L16.4",
+    "title": "L16.4 — Reactive Obstacle Avoidance Quiz",
+    "passingScore": 60,
+    "questions": [
+      {"questionText":"What triggers an immediate stop command in reactive obstacle avoidance?","points":1,"options":[{"text":"Reaching the global destination coordinate","isCorrect":false},{"text":"Frontal distance falling below a predefined safety stop threshold d_stop","isCorrect":true},{"text":"Completing an A* search algorithm","isCorrect":false},{"text":"Achieving maximum linear acceleration","isCorrect":false}]},
+      {"questionText":"Which of the following is a common reactive obstacle avoidance strategy?","points":1,"options":[{"text":"Dijkstra's cumulative cost evaluation","isCorrect":false},{"text":"Potential-field methods (repulsive and attractive forces)","isCorrect":true},{"text":"Global graph-search optimization","isCorrect":false},{"text":"S-curve velocity ramping","isCorrect":false}]},
+      {"questionText":"What is a primary strength of reactive obstacle avoidance strategies?","points":1,"options":[{"text":"Complete immunity to local minima traps","isCorrect":false},{"text":"Ultra-fast reaction time for handling sudden, unmapped dynamic obstacles","isCorrect":true},{"text":"Comprehensive global awareness of the entire map","isCorrect":false},{"text":"Zero risk of oscillation bugs","isCorrect":false}]},
+      {"questionText":"What is a major limitation of purely reactive controllers?","points":1,"options":[{"text":"They are too slow for real-world robotics","isCorrect":false},{"text":"They frequently fall victim to local minima traps","isCorrect":true},{"text":"They require massive computational clusters","isCorrect":false},{"text":"They cannot handle proximity sensors","isCorrect":false}]},
+      {"questionText":"Why must optimal robotic architectures combine reactive behaviors with global path planning?","points":1,"options":[{"text":"To eliminate all motors and actuators","isCorrect":false},{"text":"To prevent getting stuck in local minima and ensure efficient long-term routing","isCorrect":true},{"text":"To remove the need for sensor calibration","isCorrect":false},{"text":"To increase wheel slip and friction","isCorrect":false}]}
+    ]
+  },
+  {
+    "lessonCode": "L16.5",
+    "title": "L16.5 — Path Planning Algorithms Quiz",
+    "passingScore": 60,
+    "questions": [
+      {"questionText":"How does Breadth-First Search (BFS) explore grid cells?","points":1,"options":[{"text":"Uniformly outward layer by layer based strictly on step count","isCorrect":true},{"text":"Using heuristic distance estimates to the goal","isCorrect":false},{"text":"Prioritizing nodes with the lowest cumulative operational cost g(n)","isCorrect":false},{"text":"Evaluating centripetal acceleration limits","isCorrect":false}]},
+      {"questionText":"What is a major drawback of Breadth-First Search in robotics?","points":1,"options":[{"text":"It fails to find the shortest step-count path","isCorrect":false},{"text":"It explores in all directions equally and cannot naturally account for varying travel costs","isCorrect":true},{"text":"It requires complex Euclidean distance formulas","isCorrect":false},{"text":"It only works on continuous curves","isCorrect":false}]},
+      {"questionText":"What does Dijkstra's algorithm evaluate nodes based on?","points":1,"options":[{"text":"Heuristic estimates h(n) alone","isCorrect":false},{"text":"The exact operational cost g(n) incurred from the start node","isCorrect":true},{"text":"Temporal timestamps and velocity profiles","isCorrect":false},{"text":"Sensor noise and Gaussian error distributions","isCorrect":false}]},
+      {"questionText":"What does the A* (A-star) search evaluation function f(n) consist of?","points":1,"options":[{"text":"f(n) = g(n) + h(n)","isCorrect":true},{"text":"f(n) = v_max · a_max","isCorrect":false},{"text":"f(n) = d_brake / t","isCorrect":false},{"text":"f(n) = θ + (x, y)","isCorrect":false}]},
+      {"questionText":"How is the heuristic estimate h(n) often calculated for grid-based robotics in A*?","points":1,"options":[{"text":"Using motor torque and gear ratios","isCorrect":false},{"text":"Using Euclidean distance or Manhattan distance formulas","isCorrect":true},{"text":"Using wheel radius and track width","isCorrect":false},{"text":"Using obstacle inflation cell counts","isCorrect":false}]}
+    ]
+  },
+  {
+    "lessonCode": "L16.6",
+    "title": "L16.6 — Path vs. Trajectory Quiz",
+    "passingScore": 60,
+    "questions": [
+      {"questionText":"What does a geometric path dictate in robotics engineering?","points":1,"options":[{"text":"Where the robot should go spatially (without temporal parameters)","isCorrect":true},{"text":"When the robot must arrive at specific timestamps","isCorrect":false},{"text":"The exact motor torque curves and tire friction limits","isCorrect":false},{"text":"The real-time sensor noise distribution","isCorrect":false}]},
+      {"questionText":"What does trajectory planning add to a geometric path?","points":1,"options":[{"text":"Infinitely thin obstacle boundaries","isCorrect":false},{"text":"Time-parameterized profiles and kinematic parameters","isCorrect":true},{"text":"Grid cell discretizations","isCorrect":false},{"text":"Breadth-First Search node expansions","isCorrect":false}]},
+      {"questionText":"Which physical limitations are integrated during trajectory planning?","points":1,"options":[{"text":"Maximum linear velocity, peak acceleration limits, and braking deceleration distances","isCorrect":true},{"text":"Global coordinate reference frames","isCorrect":false},{"text":"Ultrasonic sensor beam widths","isCorrect":false},{"text":"Matrix lookup values for static obstacles","isCorrect":false}]},
+      {"questionText":"Why is optimal navigation route calculation fundamentally a time-optimization problem?","points":1,"options":[{"text":"Because distance is always irrelevant in robotics","isCorrect":false},{"text":"Because slowing down for sharp turns can result in longer travel times than smoother, longer curves","isCorrect":true},{"text":"Because computers cannot calculate geometric paths without timestamps","isCorrect":false},{"text":"Because robots cannot move in straight lines","isCorrect":false}]},
+      {"questionText":"What velocity profiles are typically generated to ensure smooth trajectory execution?","points":1,"options":[{"text":"Random noise profiles","isCorrect":false},{"text":"Trapezoidal or S-curve velocity ramps","isCorrect":true},{"text":"Discontinuous step-function jumps","isCorrect":false},{"text":"Exponential decay curves","isCorrect":false}]}
+    ]
+  },
+  {
+    "lessonCode": "L16.7",
+    "title": "L16.7 — Minimum-time Navigation Quiz",
+    "passingScore": 60,
+    "questions": [
+      {"questionText":"What must an autonomous mobile robot analyze candidate paths for during minimum-time navigation?","points":1,"options":[{"text":"Total route length and cumulative time cost during acceleration, cruising, and deceleration zones","isCorrect":true},{"text":"Only the number of grid cells without regard to velocity","isCorrect":false},{"text":"Static obstacle footprint radii alone","isCorrect":false},{"text":"Ambient sunlight interference and lens distortion","isCorrect":false}]},
+      {"questionText":"How is the turning velocity v_turn constrained around sharp turns by centripetal acceleration limits?","points":1,"options":[{"text":"v_turn = v_max","isCorrect":false},{"text":"v_turn ≤ √(a_lateral,max · R)","isCorrect":true},{"text":"v_turn = 2 · a_brake","isCorrect":false},{"text":"v_turn = g(n) + h(n)","isCorrect":false}]},
+      {"questionText":"What does the emergency braking distance formula d_brake equal?","points":1,"options":[{"text":"v² / (2a_brake)","isCorrect":true},{"text":"v · t","isCorrect":false},{"text":"√(R · a)","isCorrect":false},{"text":"g(n) - h(n)","isCorrect":false}]},
+      {"questionText":"What is minimum-time navigation fundamentally described as?","points":1,"options":[{"text":"A purely random trial-and-error process","isCorrect":false},{"text":"An iterative constraint-satisfaction and optimization process balancing aggressiveness against safety","isCorrect":true},{"text":"A static grid discretization step","isCorrect":false},{"text":"A method for eliminating all sensor noise","isCorrect":false}]},
+      {"questionText":"Which physical factors are modeled in minimum-time navigation?","points":1,"options":[{"text":"Robot mass, motor torque curves, friction coefficients, and safety envelopes","isCorrect":true},{"text":"Camera resolution and focal length","isCorrect":false},{"text":"Room temperature and lighting conditions","isCorrect":false},{"text":"Global coordinate system origin offsets","isCorrect":false}]}
+    ]
+  },
+  {
+    "lessonCode": "L16.8",
+    "title": "L16.8 — Dynamic Obstacles and Replanning Quiz",
+    "passingScore": 60,
+    "questions": [
+      {"questionText":"What can block a previously calculated route long after initial mission planning is complete?","points":1,"options":[{"text":"Static room dimensions","isCorrect":false},{"text":"Moving obstacles such as pedestrians, other robots, or shifting objects","isCorrect":true},{"text":"Constant wheel radii and track widths","isCorrect":false},{"text":"Fixed grid cell resolutions","isCorrect":false}]},
+      {"questionText":"What does a continuous dynamic replanning loop require?","points":1,"options":[{"text":"Halting the robot permanently upon any sensor reading","isCorrect":false},{"text":"Repeatedly reading incoming sensor streams and evaluating path intersection","isCorrect":true},{"text":"Ignoring all sensor inputs to maintain speed","isCorrect":false},{"text":"Disabling the global path planner entirely","isCorrect":false}]},
+      {"questionText":"What hazard must algorithms guard against during global path replanning?","points":1,"options":[{"text":"Oscillation bugs (flip-flopping back and forth between detours due to symmetrical costs)","isCorrect":true},{"text":"Excessive wheel slip caused by high motor torques","isCorrect":false},{"text":"Infinite computational speed loops","isCorrect":false},{"text":"Ultrasonic sensor reflectivity dependencies","isCorrect":false}]},
+      {"questionText":"What is paramount during dynamic obstacle encounters and replanning events?","points":1,"options":[{"text":"Prioritizing maximum speed over safety","isCorrect":false},{"text":"Prioritizing safety over speed","isCorrect":true},{"text":"Ignoring local reactive avoidance behaviors","isCorrect":false},{"text":"Maximizing centripetal acceleration around corners","isCorrect":false}]},
+      {"questionText":"What does a hierarchical control scheme combine in resilient navigation systems?","points":1,"options":[{"text":"Global route planning with local, sensor-driven reactive updates","isCorrect":true},{"text":"Ultrasonic sensors with infrared sensors only","isCorrect":false},{"text":"Breadth-First Search with Dijkstra's algorithm without heuristics","isCorrect":false},{"text":"Static maps with unchangeable obstacle footprints","isCorrect":false}]}
+    ]
+  },
+  {
+    "lessonCode": "L16.9",
+    "title": "L16.9 — Python Obstacle-course Simulator Quiz",
+    "passingScore": 60,
+    "questions": [
+      {"questionText":"What is the primary purpose of building a 2D grid-world simulator in Python?","points":1,"options":[{"text":"To replace physical machinery with expensive hardware immediately","isCorrect":false},{"text":"To test and debug navigation logic before deploying onto physical hardware","isCorrect":true},{"text":"To eliminate the need for pathfinding algorithms","isCorrect":false},{"text":"To measure real-world battery degradation","isCorrect":false}]},
+      {"questionText":"Which libraries are commonly used for Python grid-world simulators?","points":1,"options":[{"text":"Pygame for animation or Matplotlib for static plotting","isCorrect":true},{"text":"NumPy and Pandas for statistical database queries","isCorrect":false},{"text":"DART and ROS without visualization","isCorrect":false},{"text":"Kalman and S-curve filters","isCorrect":false}]},
+      {"questionText":"How is cell occupancy checked during simulation validation?","points":1,"options":[{"text":"Via matrix lookups, ensuring if M[x][y] == 1, the coordinate is flagged as impassable","isCorrect":true},{"text":"By measuring wheel slip and tire friction coefficients","isCorrect":false},{"text":"By calculating exact time-of-flight ultrasound echoes","isCorrect":false},{"text":"By evaluating centripetal acceleration limits","isCorrect":false}]},
+      {"questionText":"What quantitative performance metrics do engineers track during simulator evaluation?","points":1,"options":[{"text":"Total travel distance, simulated mission time, collision counts, and replanning frequency","isCorrect":true},{"text":"Camera pixel density and frame rates","isCorrect":false},{"text":"Motor gear ratios and electrical voltage drops","isCorrect":false},{"text":"Global coordinate reference angles (θ)","isCorrect":false}]},
+      {"questionText":"What does simulated testing allow rapid iteration of?","points":1,"options":[{"text":"Heuristic weights, speed profiles, and sensor noise models","isCorrect":true},{"text":"Physical robot mass and chassis dimensions","isCorrect":false},{"text":"Real-world pedestrian movements","isCorrect":false},{"text":"Sensor manufacturing defects","isCorrect":false}]}
+    ]
+  },
+  {
+    "lessonCode": "L16.10",
+    "title": "L16.10 — Example Navigation Loop Quiz",
+    "passingScore": 60,
+    "questions": [
+      {"questionText":"What phases does the cyclical execution structure of an autonomous robot separate?","points":1,"options":[{"text":"Sensing, decision-making, and actuation into distinct phases","isCorrect":true},{"text":"Acceleration, cruising, and braking into random sequences","isCorrect":false},{"text":"Heuristic estimation and sensor noise into static matrices","isCorrect":false},{"text":"Global path planning and obstacle inflation into single steps","isCorrect":false}]},
+      {"questionText":"What does the pseudocode instruction sensor_data = read_sensors() accomplish?","points":1,"options":[{"text":"Gathers fresh telemetry","isCorrect":true},{"text":"Computes the A* shortest path","isCorrect":false},{"text":"Triggers emergency braking","isCorrect":false},{"text":"Logs pose and time coordinates","isCorrect":false}]},
+      {"questionText":"What conditional check evaluates safety parameters inside the control loop?","points":1,"options":[{"text":"if obstacle_is_too_close(sensor_data):","isCorrect":true},{"text":"if time == max_speed:","isCorrect":false},{"text":"while at_goal:","isCorrect":false},{"text":"matrix_lookup(M[x][y] == 0)","isCorrect":false}]},
+      {"questionText":"What does the log_pose_and_time() function record at the conclusion of the loop?","points":1,"options":[{"text":"Position coordinates, timestamps, and battery levels for post-mission evaluation","isCorrect":true},{"text":"Ultrasonic sensor reflection intensity and camera focal lengths","isCorrect":false},{"text":"Wheel radius and track width parameters","isCorrect":false},{"text":"Centripetal force limits and tire slip coefficients","isCorrect":false}]},
+      {"questionText":"What real-world engineering considerations must be addressed when deploying the control loop on hardware?","points":1,"options":[{"text":"Precise sensor calibration, motor controller tuning, and fail-safe behavioral overrides","isCorrect":true},{"text":"Infinite computational speed and zero latency","isCorrect":false},{"text":"Eliminating all environmental obstacles from the physical world","isCorrect":false},{"text":"Removing all safety margins and maximizing motor aggressiveness","isCorrect":false}]}
+    ]
+  }
+]

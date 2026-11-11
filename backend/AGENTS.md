@@ -24,4 +24,4 @@ Express 5 + `mysql2/promise`, CommonJS, every route in `server.js`. `db.js` expo
 
 - `mysql-clean-init/*.sql` is the schema source of truth — Docker init runs it once, on a fresh volume only. Schema change = edit it, then `docker compose down -v` + `docker compose up --build -d` (wipes local data and uploads).
 - `mysql-init/` is dead history; the clean stack never runs it.
-- Seeders in `seeds/` run against a live API (`node seeds/seed-lesson15-quizzes.js`), POST to `/api/quizzes`, and refuse to overwrite an existing quiz.
+- Existing API seeders in `seeds/` POST to the live API and refuse to overwrite an existing quiz. The Lesson 16 seeder writes directly to MySQL with `node seeds/seed-lesson16-quizzes.js`; when running it from the host, set `DB_PORT=3308` for the Compose port mapping. It refuses to replace existing quizzes and inserts the full set in one transaction.

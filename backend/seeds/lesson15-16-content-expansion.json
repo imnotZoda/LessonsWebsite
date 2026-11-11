@@ -1,0 +1,102 @@
+{
+  "L15.1": [
+    "<p><strong>Structural Load Paths:</strong> Payload forces travel from the tool through the wrist, links, and joints into the base and mounting surface. Understanding this load path helps engineers select link materials, bearings, and fasteners that can withstand both static loads and repeated motion.</p>",
+    "<p><strong>Joint Limits and Singularities:</strong> Each joint has a safe operating range, and some configurations make the arm lose useful motion in a particular direction. A controller should check limits and avoid singular configurations because small tool movements there can require very large joint movements.</p>",
+    "<p><strong>Calibration:</strong> The mathematical model must agree with the physical arm. Home switches, encoder offsets, link-length measurements, and tool-center-point calibration reduce the difference between the commanded pose and the actual end-effector pose.</p>"
+  ],
+  "L15.2": [
+    "<p><strong>Pose Representation:</strong> A pose combines a position vector with an orientation representation such as roll-pitch-yaw angles, a rotation matrix, or a quaternion. The chosen representation should be interpreted consistently so that rotations are not silently applied in the wrong order.</p>",
+    "<p><strong>Frame Transformations:</strong> A target measured by a camera or fixture must be transformed into the robot base frame before inverse kinematics is used. Chaining transforms between the base, tool, sensor, and object frames makes the source of each coordinate explicit.</p>",
+    "<p><strong>Orientation Tolerance:</strong> A placement can have an acceptable position error but still fail if the tool is rotated incorrectly. Practical motion planners therefore define separate position and orientation tolerances and verify both before releasing a payload.</p>"
+  ],
+  "L15.3": [
+    "<p><strong>Choosing a Motion Space:</strong> Joint-space motion is often shorter to compute and can keep every actuator within its limits, while Cartesian motion gives better control over the tool path. The task determines which priority matters more: actuator efficiency, geometric precision, or collision clearance.</p>",
+    "<p><strong>Interpolation Timing:</strong> Position interpolation alone does not guarantee safe motion. A time-scaling function should provide smooth velocity and acceleration, with zero or controlled endpoint velocity when the arm approaches a grasp or placement pose.</p>",
+    "<p><strong>Jacobian Connection:</strong> The Jacobian maps joint velocities to end-effector velocity. Monitoring its condition helps identify near-singular poses and lets a controller reduce speed or choose an alternative configuration before tracking quality deteriorates.</p>"
+  ],
+  "L15.4": [
+    "<p><strong>Contact Geometry:</strong> Finger pads should contact surfaces with enough area and alignment to distribute pressure. Rounded or compliant pads can tolerate small pose errors, while rigid pads provide repeatable contact when the part geometry is tightly controlled.</p>",
+    "<p><strong>Actuator Sizing:</strong> A gripper actuator must provide enough force and stroke for the object while still operating within its duty cycle. Transmission losses, acceleration loads, and the worst-case object orientation should be included when selecting the actuator.</p>",
+    "<p><strong>Feedback and Verification:</strong> Position sensing can confirm that the jaws closed, but it does not always prove that an object is present. Combining jaw position with motor current, force sensing, or a payload check gives the sequence stronger evidence of a successful grasp.</p>"
+  ],
+  "L15.5": [
+    "<p><strong>Friction Dependence:</strong> The available tangential friction is proportional to normal force, but the coefficient changes with material, dust, moisture, and pad wear. A robust grasp therefore uses measured or conservatively estimated friction rather than relying on an ideal laboratory value.</p>",
+    "<p><strong>Contact Placement:</strong> Contacts placed near the object center of mass reduce the tendency to rotate, while widely separated contacts increase the resisting moment. The grasp should also account for acceleration and deceleration forces during transfer, not only gravity.</p>",
+    "<p><strong>Force Ramping:</strong> Closing the fingers gradually allows sensors to detect contact before the full command is applied. This prevents impacts and lets the controller stop increasing force when the object is secure, especially for fragile or deformable parts.</p>"
+  ],
+  "L15.6": [
+    "<p><strong>Moment Balance:</strong> A payload creates a moment that grows with its perpendicular distance from the joint axis. Moving the object farther from the base can therefore increase required actuator torque even when the object mass stays constant.</p>",
+    "<p><strong>Static Versus Dynamic Loads:</strong> Static equilibrium describes a stopped arm, but acceleration adds inertial forces during motion. Motor and structural sizing should include a dynamic margin so that a system that is stable at rest does not overload when it starts or stops.</p>",
+    "<p><strong>Support Reaction:</strong> The base and mounting structure must carry the combined reaction forces and moments from the links and payload. A stable floor attachment and correctly tightened fasteners are part of the equilibrium problem, not details outside the model.</p>"
+  ],
+  "L15.7": [
+    "<p><strong>Feedback Loop:</strong> Encoders report the measured joint position, and the controller compares it with the commanded trajectory to form an error signal. Gains must be tuned high enough for accurate tracking without causing oscillation, noise amplification, or excessive actuator effort.</p>",
+    "<p><strong>Compliance:</strong> Hybrid or impedance control can make the arm stiff in free space while allowing controlled yielding during contact. This is useful for insertion, polishing, and surface following where a rigid position command could damage the part.</p>",
+    "<p><strong>Transition Management:</strong> Switching from position control to force control should use a defined contact event and a bounded transition. Filtering sensor readings and limiting force changes prevents a noisy contact measurement from producing an abrupt command.</p>"
+  ],
+  "L15.8": [
+    "<p><strong>Pre-Grasp Planning:</strong> A useful pre-grasp pose leaves room for the fingers to close and creates a short, predictable approach path. The planner should check the arm, gripper, and payload clearance before entering the final grasp state.</p>",
+    "<p><strong>Verification Gates:</strong> Each state should wait for measurable evidence such as a pose tolerance, contact signal, object-clearance height, or destination alignment. Timeouts and retry limits keep a failed operation from continuing as if it had succeeded.</p>",
+    "<p><strong>Release Planning:</strong> Placement is complete only after the object is supported by the destination and the gripper can open without dragging it. A short retreat and a post-release check help distinguish a successful release from an object that remains attached.</p>"
+  ],
+  "L15.9": [
+    "<p><strong>Simulation Parameters:</strong> Keep geometry, joint limits, masses, friction values, and controller gains in a configuration object rather than scattering constants through the program. This makes experiments repeatable and allows the same model to support multiple arm designs.</p>",
+    "<p><strong>Numerical Checks:</strong> A simulator should reject targets outside the reachable workspace, clamp or report invalid joint limits, and handle inverse-kinematics solutions that do not exist. These checks turn unrealistic inputs into visible test failures instead of misleading animation.</p>",
+    "<p><strong>Validation Metrics:</strong> Record position error, orientation error, path length, execution time, and minimum obstacle clearance for each run. Comparing those metrics across target locations shows whether an algorithm works consistently rather than only in one demonstration.</p>"
+  ],
+  "L15.10": [
+    "<p><strong>State Contracts:</strong> Each state should define its entry action, completion condition, timeout, and safe exit. This makes the program easier to test because every transition can be exercised with controlled sensor values.</p>",
+    "<p><strong>Fault Handling:</strong> Unexpected contact, loss of a grasp, an unreachable target, or a stalled actuator should move the machine to a recovery or stop state. Recovery may open the gripper and return to a known safe pose rather than repeating the same failed command.</p>",
+    "<p><strong>Observability:</strong> Logging state changes, target poses, sensor decisions, and transition reasons gives operators a trace of what the arm believed during a cycle. Clear events are especially valuable when a physical failure cannot be reproduced in simulation.</p>"
+  ],
+  "L16.1": [
+    "<p><strong>Differential-Drive Geometry:</strong> Equal wheel speeds move the robot forward, while a speed difference produces a turn about an instantaneous center of curvature. Reversing both wheel speeds changes the travel direction without changing the basic relationship between wheel motion and body motion.</p>",
+    "<p><strong>Non-Holonomic Constraint:</strong> The robot can command forward and rotational velocity, but it cannot directly command sideways velocity. A planner must therefore produce feasible turns and the controller must rotate or follow an arc instead of attempting an impossible lateral slide.</p>",
+    "<p><strong>Odometry Limits:</strong> Wheel encoders estimate pose by integrating wheel travel, so small radius errors and wheel slip accumulate over time. Periodic localization from landmarks, vision, or range sensors is needed when navigation requires a bounded global position error.</p>"
+  ],
+  "L16.2": [
+    "<p><strong>Grid Resolution:</strong> Smaller cells represent obstacles and corridors more precisely but increase memory and search cost. The resolution should be fine enough for the robot footprint and safety margin while remaining practical for real-time planning.</p>",
+    "<p><strong>Coordinate Conventions:</strong> A map must define its origin, row and column direction, and the conversion between cell centers and world coordinates. Consistent rounding and boundary checks prevent a robot from being assigned to a neighboring cell or an index outside the map.</p>",
+    "<p><strong>Occupancy Confidence:</strong> Real maps often contain unknown cells rather than only free and blocked cells. A navigation policy can treat unknown space as blocked for safety or allow it with a higher traversal cost, depending on whether exploration is permitted.</p>"
+  ],
+  "L16.3": [
+    "<p><strong>Sensor Models:</strong> A range reading is affected by beam direction, maximum range, field of view, and measurement noise. Simulating those limits produces more realistic obstacle detection than checking only the nearest geometric distance.</p>",
+    "<p><strong>Obstacle Inflation:</strong> The inflation radius should include the robot footprint, localization uncertainty, and a desired safety margin. If the map resolution is coarse, the radius must also be rounded conservatively so that blocked cells do not understate the actual clearance.</p>",
+    "<p><strong>Filtering Measurements:</strong> A single noisy hit should not cause unnecessary replanning, but a persistent close reading must not be ignored. Temporal filtering and a clear emergency-stop threshold separate normal sensor noise from a genuine collision risk.</p>"
+  ],
+  "L16.4": [
+    "<p><strong>Heuristic Choice:</strong> A heuristic is admissible when it never overestimates the remaining cost, which lets A* preserve optimality under the selected movement model. Manhattan distance suits four-connected grids, while Euclidean or octile distance suits grids that permit diagonal motion.</p>",
+    "<p><strong>Search Costs:</strong> Dijkstra explores by accumulated cost and remains useful when traversal costs vary or no reliable heuristic is available. Greedy best-first search can be faster because it follows the goal estimate, but it may return a longer route.</p>",
+    "<p><strong>Path Cleanup:</strong> The raw cell sequence may contain unnecessary zigzags. After search, a line-of-sight check can remove safe intermediate waypoints, provided the simplified segments still respect inflated obstacles and the robot's motion constraints.</p>"
+  ],
+  "L16.5": [
+    "<p><strong>Path to Time:</strong> A geometric path becomes a trajectory only after assigning time to each segment. Maximum linear speed, angular speed, acceleration, and deceleration determine whether the robot can follow the path without violating its physical limits.</p>",
+    "<p><strong>Curvature:</strong> Sharp corners require an abrupt change in heading and can exceed the differential-drive robot's angular capability. Replacing corners with arcs or blended turns produces smoother commands and reduces wheel-speed discontinuities.</p>",
+    "<p><strong>Tracking Control:</strong> A trajectory follower compares the current pose with a future reference point and corrects both heading and cross-track error. Speed should be reduced when the heading error or curvature becomes large so the robot remains stable.</p>"
+  ],
+  "L16.6": [
+    "<p><strong>Geometric Path:</strong> A path answers which positions the robot should visit, without specifying how quickly it travels. Different time schedules can follow the same path while producing very different wheel speeds and control effort.</p>",
+    "<p><strong>Trajectory Constraints:</strong> A trajectory adds velocity, acceleration, and sometimes jerk limits to every point along the path. These limits matter for motor sizing, passenger or payload stability, and predictable sensor timing.</p>",
+    "<p><strong>Practical Comparison:</strong> A mathematically short path may be a poor trajectory if it contains tight turns or abrupt direction changes. Evaluating length together with curvature, clearance, and execution time gives a more useful navigation comparison.</p>"
+  ],
+  "L16.7": [
+    "<p><strong>Time Objective:</strong> Minimum-time navigation seeks the fastest feasible arrival, not simply the shortest geometric distance. The optimizer must balance distance against turns, speed limits, acceleration time, and the need to slow near obstacles or the goal.</p>",
+    "<p><strong>Feasibility First:</strong> A candidate that arrives quickly but violates wheel or angular limits is not a valid solution. Constraints should be applied during optimization or used to reject the candidate before it reaches the motion controller.</p>",
+    "<p><strong>Goal Approach:</strong> The robot should reduce speed as it enters the goal tolerance so that stopping error remains small. A controlled final heading can also make the robot ready for the next task rather than merely close to the target position.</p>"
+  ],
+  "L16.8": [
+    "<p><strong>Detection and Prediction:</strong> A moving obstacle should be tracked across multiple sensor updates so its velocity and likely future position can be estimated. Planning against predicted occupancy gives the robot more time to react than waiting for the obstacle to enter its current path.</p>",
+    "<p><strong>Replanning Triggers:</strong> Replanning may be required when a path cell becomes blocked, clearance falls below a threshold, or the estimated obstacle motion changes materially. Hysteresis prevents repeated plan changes caused by small fluctuations around the threshold.</p>",
+    "<p><strong>Safe Behavior:</strong> When no valid detour is immediately available, the robot should reduce speed or stop in a known safe location. Continuing with an obsolete plan is less safe than waiting for new sensor information.</p>"
+  ],
+  "L16.9": [
+    "<p><strong>Simulator Components:</strong> A useful obstacle-course simulator separates the map, robot state, sensor model, planner, controller, and renderer. This separation lets each component be tested independently and makes it easier to replace a simple model with a more realistic one.</p>",
+    "<p><strong>Experiment Reproducibility:</strong> Store the map, start and goal positions, random seed, resolution, and controller settings with each run. Reproducible scenarios make it possible to compare planning algorithms fairly after a code change.</p>",
+    "<p><strong>Performance Reporting:</strong> Summaries should include success rate, path length, travel time, nodes explored, replans, minimum clearance, and final pose error. These measurements reveal trade-offs that are not visible from the animation alone.</p>"
+  ],
+  "L16.10": [
+    "<p><strong>Loop Timing:</strong> The navigation loop should run at a known update rate and separate sensing, localization, planning, and control deadlines. A delayed computation must be detected so the controller does not act on stale pose or obstacle data.</p>",
+    "<p><strong>Waypoint Progress:</strong> The controller can advance to the next waypoint after the current one enters a position and heading tolerance. Progress checks should also detect if the robot is stuck, moving away from the goal, or repeatedly failing to reduce its tracking error.</p>",
+    "<p><strong>Completion and Recovery:</strong> A successful loop verifies the final pose and stops the wheels before reporting completion. If a sensor fault, blocked path, or timeout occurs, the loop should issue a safe stop and expose the reason for operator or higher-level recovery logic.</p>"
+  ]
+}

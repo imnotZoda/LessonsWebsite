@@ -7,7 +7,7 @@
 // vertical arm plane to the target, shoulder/elbow (θ₁, θ₂) solve planar IK.
 
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Canvas, useFrame, type ThreeEvent } from '@react-three/fiber';
 import { ContactShadows, Edges, Grid, OrbitControls } from '@react-three/drei';
 import { Vector3, type Group } from 'three';
@@ -130,11 +130,13 @@ interface ArmRigProps {
   holdPointRef: React.MutableRefObject<Vector3>;
   onStepDone: (step: SeqStep, nextLabel: string) => void;
   onSeqDone: (mode: 'pick' | 'place') => void;
+  onLiveArm?: (state: { yaw: number; t1: number; t2: number; grip: number }) => void;
 }
 
-function ArmRig({ goalRef, gripGoalRef, seqRef, phase, holdPointRef, onStepDone, onSeqDone }: ArmRigProps) {
+function ArmRig({ goalRef, gripGoalRef, seqRef, phase, holdPointRef, onStepDone, onSeqDone, onLiveArm }: ArmRigProps) {
   const joints = useRef({ ...STOW });
   const grip = useRef(0);
+  const lastEmit = useRef(0);
   const yawGroup = useRef<Group>(null);
   const joint1 = useRef<Group>(null);
   const joint2 = useRef<Group>(null);
@@ -175,6 +177,17 @@ function ArmRig({ goalRef, gripGoalRef, seqRef, phase, holdPointRef, onStepDone,
     if (k1b.current) k1b.current.rotation.x = -k1;
     if (k2a.current) k2a.current.rotation.x = k2;
     if (k2b.current) k2b.current.rotation.x = -k2;
+
+    const now = typeof performance !== 'undefined' ? performance.now() : Date.now();
+    if (now - lastEmit.current > 45) {
+      lastEmit.current = now;
+      onLiveArm?.({
+        yaw: joints.current.yaw,
+        t1: joints.current.t1,
+        t2: joints.current.t2,
+        grip: grip.current
+      });
+    }
 
     // advance the sequence when the current step settles
     if (s && s.i < s.steps.length) {
@@ -353,6 +366,9 @@ export default function ArmSimulation() {
   const [stepLabel, setStepLabel] = useState<string | null>(null);
   const [fsmSteps, setFsmSteps] = useState<string[]>([]);
   const [dragging, setDragging] = useState(false);
+  const [liveArm, setLiveArm] = useState({ yaw: STOW.yaw, t1: STOW.t1, t2: STOW.t2, grip: 0 });
+  const [selectedSubtopic, setSelectedSubtopic] = useState('L15.10');
+  const [isExplanationCollapsed, setIsExplanationCollapsed] = useState(false);
 
   const goal = useRef({ ...STOW });
   const gripGoal = useRef(0);
@@ -459,6 +475,7 @@ export default function ArmSimulation() {
     held.current = false;
     gripGoal.current = 0;
     Object.assign(goal.current, STOW);
+    setLiveArm({ yaw: STOW.yaw, t1: STOW.t1, t2: STOW.t2, grip: 0 });
     setMarker(null);
     setStepLabel(null);
     setFsmSteps([]);
@@ -535,28 +552,57 @@ export default function ArmSimulation() {
             holdPointRef={holdPoint}
             onStepDone={onStepDone}
             onSeqDone={onSeqDone}
+            onLiveArm={setLiveArm}
           />
           <OrbitControls makeDefault enabled={!dragging} maxPolarAngle={Math.PI / 2.05} minDistance={3} maxDistance={14} />
         </Canvas>
       </View>
 
-      <View style={styles.side}>
-        <ExplanationPanel
-          result={result}
-          l1={L1}
-          l2={L2}
-          shoulderH={SHOULDER_H}
-          gripY={GRIP_Y}
-          fsmSteps={fsmSteps}
-          activeStep={stepLabel}
-        />
-        <Text style={styles.hint}>{hint}</Text>
-        <View style={styles.resetBtn}>
-          <Text style={styles.resetBtnText} onPress={reset}>
-            ↺ Reset simulation
-          </Text>
+      {isExplanationCollapsed ? (
+        <View style={styles.collapsedRail}>
+          <TouchableOpacity
+            style={styles.toggleButton}
+            onPress={() => setIsExplanationCollapsed(false)}
+            accessibilityLabel="Show explanation panel"
+            accessibilityRole="button"
+          >
+            <Text style={styles.toggleButtonText}>‹</Text>
+          </TouchableOpacity>
         </View>
-      </View>
+      ) : (
+        <View style={styles.side}>
+          <TouchableOpacity
+            style={styles.collapseButton}
+            onPress={() => setIsExplanationCollapsed(true)}
+            accessibilityLabel="Hide explanation panel"
+            accessibilityRole="button"
+          >
+            <Text style={styles.collapseButtonText}>›</Text>
+          </TouchableOpacity>
+          <ExplanationPanel
+            result={result}
+            l1={L1}
+            l2={L2}
+            shoulderH={SHOULDER_H}
+            gripY={GRIP_Y}
+            fsmSteps={fsmSteps}
+            activeStep={stepLabel}
+            phase={phase}
+            currentJoints={{ yaw: liveArm.yaw, t1: liveArm.t1, t2: liveArm.t2 }}
+            gripValue={liveArm.grip}
+            cubePos={cubePos}
+            markerPos={marker}
+            selectedSubtopic={selectedSubtopic}
+            onSelectSubtopic={setSelectedSubtopic}
+          />
+          <Text style={styles.hint}>{hint}</Text>
+          <View style={styles.resetBtn}>
+            <Text style={styles.resetBtnText} onPress={reset}>
+              ↺ Reset simulation
+            </Text>
+          </View>
+        </View>
+      )}
     </View>
   );
 }
@@ -571,8 +617,34 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#2a3d5f'
   },
-  side: { width: 320, gap: 12 },
-  hint: { fontSize: 12, lineHeight: 18, color: '#c4c9d8' },
+  side: { width: 680, maxWidth: '60%', height: '100%', gap: 12, alignSelf: 'flex-start', marginTop: -8 },
+  collapsedRail: { width: 52, alignItems: 'center' },
+  collapseButton: {
+    alignSelf: 'flex-end',
+    width: 28,
+    height: 28,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 14,
+    backgroundColor: 'rgba(29, 49, 85, 0.72)',
+    borderWidth: 1,
+    borderColor: 'rgba(59, 91, 136, 0.7)',
+    marginBottom: -4
+  },
+  collapseButtonText: { fontSize: 20, lineHeight: 20, fontWeight: '400', color: '#9fb9dc' },
+  toggleButton: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 4,
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    backgroundColor: 'rgba(22, 34, 63, 0.72)',
+    borderWidth: 1,
+    borderColor: 'rgba(42, 61, 95, 0.75)'
+  },
+  toggleButtonText: { fontSize: 20, lineHeight: 20, fontWeight: '400', color: '#9fb9dc' },
+  hint: { fontSize: 14, lineHeight: 21, color: '#c4c9d8' },
   resetBtn: {
     alignSelf: 'flex-start',
     backgroundColor: '#e0563f',
@@ -582,5 +654,5 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#ff7a63'
   },
-  resetBtnText: { fontSize: 13, fontWeight: '700', color: '#ffffff', letterSpacing: 0.3 }
+  resetBtnText: { fontSize: 14, fontWeight: '700', color: '#ffffff', letterSpacing: 0.3 }
 });

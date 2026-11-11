@@ -2,7 +2,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 
-export type RouteName = 'landing' | 'lessons' | 'simulation' | 'admin' | 'profile' | 'auth';
+export type RouteName = 'landing' | 'lessons' | 'simulation' | 'nav-simulation' | 'admin' | 'profile' | 'auth';
 
 interface NavbarProps {
   currentRoute: RouteName;
@@ -34,10 +34,17 @@ export default function Navbar({ currentRoute, onNavigate, userRole = 'user', on
         </TouchableOpacity>
 
         <TouchableOpacity 
+          style={[styles.link, currentRoute === 'nav-simulation' && styles.activeLink]} 
+          onPress={() => onNavigate('nav-simulation')}
+        >
+          <Text style={styles.linkText}>Navigation Sim</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity 
           style={[styles.link, currentRoute === 'simulation' && styles.activeLink]} 
           onPress={() => onNavigate('simulation')}
         >
-          <Text style={styles.linkText}>Simulation</Text>
+          <Text style={styles.linkText}>Arm Sim</Text>
         </TouchableOpacity>
 
         {userRole === 'admin' && (
