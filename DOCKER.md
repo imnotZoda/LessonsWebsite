@@ -4,6 +4,8 @@ This project runs an isolated, clean MySQL database and Express API in Docker. T
 
 ## First setup
 
+To restore the committed database and uploaded-image snapshots after cloning, follow [After Clone](./After%20Clone.md).
+
 1. Install and start Docker Desktop.
 2. From the repository root, copy the example environment file and set a local MySQL root password:
 
